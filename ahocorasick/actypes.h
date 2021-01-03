@@ -117,6 +117,7 @@ typedef struct ac_match
 typedef enum ac_status
 {
     ACERR_SUCCESS = 0,          /**< No error occurred */
+    ACERR_FAILURE,              /**< General failure */
     ACERR_DUPLICATE_PATTERN,    /**< Duplicate patterns */
     ACERR_LONG_PATTERN,         /**< Pattern length is too long */
     ACERR_ZERO_PATTERN,         /**< Empty pattern (zero length) */

@@ -86,6 +86,8 @@ int  multifast_replace (AC_TRIE_t *thiz, AC_TEXT_t *text,
         MF_REPLACE_MODE_t mode, MF_REPLACE_CALBACK_f callback, void *param);
 void multifast_rep_flush (AC_TRIE_t *thiz, int keep);
 
+AC_STATUS_t mf_serialize(AC_TRIE_t *thiz, char **bytes, size_t *length);
+AC_STATUS_t mf_deserialize(AC_TRIE_t **thiz, char *bytes, size_t length);
 
 #ifdef __cplusplus
 }

@@ -80,7 +80,7 @@ static void node_init (ACT_NODE_t *thiz)
  * 
  * @param thiz
  *****************************************************************************/
-void node_release_vectors(ACT_NODE_t *nod)
+void node_release_vectors(ACT_NODE_t *nod, void *unused)
 {
     free(nod->matched);
     free(nod->outgoing);
@@ -420,7 +420,7 @@ static void node_grow_matched_vector (ACT_NODE_t *thiz)
  * 
  * @param node
  *****************************************************************************/
-void node_collect_matches (ACT_NODE_t *nod)
+void node_collect_matches (ACT_NODE_t *nod, void *unused)
 {
     size_t i;
     ACT_NODE_t *n = nod;
@@ -445,11 +445,12 @@ void node_collect_matches (ACT_NODE_t *nod)
  * @param n
  * @param repcast
  *****************************************************************************/
-void node_display (ACT_NODE_t *nod)
+void node_display (ACT_NODE_t *nod, void *unused)
 {
-    size_t j;
+    size_t i, j;
     struct act_edge *e;
     AC_PATTERN_t patt;
+    AC_ALPHABET_t alpha;
     
     printf("NODE(%3d)/....fail....> ", nod->id);
     if (nod->failure_node)
@@ -480,13 +481,27 @@ void node_display (ACT_NODE_t *nod)
             {
             case AC_PATTID_TYPE_DEFAULT:
             case AC_PATTID_TYPE_NUMBER:
-                printf("%ld", patt.id.u.number);
+                printf("%ld:", patt.id.u.number);
                 break;
             case AC_PATTID_TYPE_STRING:
-                printf("%s", patt.id.u.stringy);
+                printf("%s:", patt.id.u.stringy);
                 break;
             }
-            printf(": %.*s", (int)patt.ptext.length, patt.ptext.astring);
+            if (sizeof(AC_ALPHABET_t) == sizeof(char)) {
+                for (i = 0; i < patt.ptext.length; i++) {
+                    alpha = patt.ptext.astring[i];
+                    if (isprint(alpha)) {
+                        printf("%c", (char)alpha);
+                    } else {
+                        printf("[%02x]", alpha);
+                    }
+                }
+            } else {
+                for (i = 0; i < patt.ptext.length; i++) {
+                    alpha = patt.ptext.astring[i];
+                    printf("%x ", alpha);
+                }
+            }
         }
         printf("}\n");
     }

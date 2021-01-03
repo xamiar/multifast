@@ -26,6 +26,10 @@
 #include "ahocorasick.h"
 #include "mpool.h"
 
+void ac_trie_traverse_action 
+    (ACT_NODE_t *node, void(*func)(ACT_NODE_t *, void *),
+        int top_down, void *user);
+
 /* Privates */
 
 static void ac_trie_set_failure
@@ -33,9 +37,6 @@ static void ac_trie_set_failure
 
 static void ac_trie_traverse_setfailure 
     (ACT_NODE_t *node, AC_ALPHABET_t *prefix);
-
-static void ac_trie_traverse_action 
-    (ACT_NODE_t *node, void(*func)(ACT_NODE_t *), int top_down);
 
 static void ac_trie_reset 
     (AC_TRIE_t *thiz);
@@ -148,7 +149,7 @@ void ac_trie_finalize (AC_TRIE_t *thiz)
      * itself recursively */
     ac_trie_traverse_setfailure (thiz->root, prefix);
     
-    ac_trie_traverse_action (thiz->root, node_collect_matches, 1);
+    ac_trie_traverse_action (thiz->root, node_collect_matches, 1, NULL);
     mf_repdata_allocbuf (&thiz->repdata);
     
     thiz->trie_open = 0; /* Do not accept patterns any more */
@@ -288,7 +289,7 @@ AC_MATCH_t ac_trie_findnext (AC_TRIE_t *thiz)
 void ac_trie_release (AC_TRIE_t *thiz)
 {
     /* It must be called with a 0 top-down parameter */
-    ac_trie_traverse_action (thiz->root, node_release_vectors, 0);
+    ac_trie_traverse_action (thiz->root, node_release_vectors, 0, NULL);
     
     mf_repdata_release (&thiz->repdata);
     mpool_free(thiz->mp);
@@ -303,7 +304,7 @@ void ac_trie_release (AC_TRIE_t *thiz)
  *****************************************************************************/
 void ac_trie_display (AC_TRIE_t *thiz)
 {
-    ac_trie_traverse_action (thiz->root, node_display, 1);
+    ac_trie_traverse_action (thiz->root, node_display, 1, NULL);
 }
 
 /**
@@ -405,18 +406,19 @@ static void ac_trie_traverse_setfailure
  * @param top_down Indicates that if the action should be applied to the note
  * itself and then to its children or vise versa.
  *****************************************************************************/
-static void ac_trie_traverse_action 
-    (ACT_NODE_t *node, void(*func)(ACT_NODE_t *), int top_down)
+void ac_trie_traverse_action 
+    (ACT_NODE_t *node, void(*func)(ACT_NODE_t *, void *),
+        int top_down, void *user)
 {
     size_t i;
     
     if (top_down)
-        func (node);
+        func (node, user);
     
     for (i = 0; i < node->outgoing_size; i++)
         /* Recursively call itself to traverse all nodes */
-        ac_trie_traverse_action (node->outgoing[i].next, func, top_down);
+        ac_trie_traverse_action (node->outgoing[i].next, func, top_down, user);
     
     if (!top_down)
-        func (node);
+        func (node, user);
 }

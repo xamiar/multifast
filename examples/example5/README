@@ -1,0 +1,20 @@
+Example 5
+---------
+
+Serialization/Deserialization example
+
+
+COMPILE
+-------
+
+First you must compile ahocorasick library.
+Then:
+
+$ cd example5
+$ make 
+
+
+RUN
+---
+
+$ build/example5

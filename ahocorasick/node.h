@@ -79,10 +79,10 @@ void node_assign_id (ACT_NODE_t *nod);
 void node_add_edge (ACT_NODE_t *nod, ACT_NODE_t *next, AC_ALPHABET_t alpha);
 void node_sort_edges (ACT_NODE_t *nod);
 void node_accept_pattern (ACT_NODE_t *nod, AC_PATTERN_t *new_patt, int copy);
-void node_collect_matches (ACT_NODE_t *nod);
-void node_release_vectors (ACT_NODE_t *nod);
+void node_collect_matches (ACT_NODE_t *nod, void *unused);
+void node_release_vectors (ACT_NODE_t *nod, void *unused);
 int  node_book_replacement (ACT_NODE_t *nod);
-void node_display (ACT_NODE_t *nod);
+void node_display (ACT_NODE_t *nod, void *unused);
 
 #ifdef __cplusplus
 }
