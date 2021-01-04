@@ -26,7 +26,7 @@
 #include "ahocorasick.h"
 #include "mpool.h"
 
-void ac_trie_traverse_action 
+void ac_trie_traverse_action
     (ACT_NODE_t *node, void(*func)(ACT_NODE_t *, void *),
         int top_down, void *user);
 
@@ -406,7 +406,7 @@ static void ac_trie_traverse_setfailure
  * @param top_down Indicates that if the action should be applied to the note
  * itself and then to its children or vise versa.
  *****************************************************************************/
-void ac_trie_traverse_action 
+void ac_trie_traverse_action
     (ACT_NODE_t *node, void(*func)(ACT_NODE_t *, void *),
         int top_down, void *user)
 {

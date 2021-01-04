@@ -11,7 +11,7 @@ First you must compile ahocorasick library.
 Then:
 
 $ cd example5
-$ make 
+$ make
 
 
 RUN
